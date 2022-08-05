@@ -13,13 +13,13 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class TransactionType extends ApplicationType
 {
     /**
-     * @var SessionInterface
+     * @var Session
      */
     private $session;
 
@@ -86,7 +86,8 @@ class TransactionType extends ApplicationType
                     ]))
         ;
 
-        $builder->get('date')->addModelTransformer(new LocaleToDateTimeTransformer($this->session));
+        $builder->get('date')
+            ->addModelTransformer(new LocaleToDateTimeTransformer($this->session));
     }
 
 

@@ -25,12 +25,12 @@ class Setting
     /**
      * @ORM\Column(type="string", length=5, nullable=true)
      */
-    private $currencySide='right';
+    private $currencySide='left';
 
     /**
      * @ORM\Column(type="string", length=2, nullable=true)
      */
-    private $currencyDecimal='0';
+    private $currencyDecimal='2';
 
     /**
      * @ORM\Column(type="string", length=2, nullable=true)
@@ -170,7 +170,7 @@ class Setting
     /**
      * @ORM\Column(type="boolean", nullable=true)
      */
-    private $productWithImage=true;
+    private $productWithImage=false;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)

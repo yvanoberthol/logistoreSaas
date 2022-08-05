@@ -21,10 +21,6 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
  * @Vich\Uploadable()
  * @ORM\HasLifecycleCallbacks()
  * @ORM\Entity(repositoryClass=ProductRepository::class)
- * @UniqueEntity(
- *     fields={"name"},
- *     message="entity.product.name"
- * )
  */
 class Product
 {

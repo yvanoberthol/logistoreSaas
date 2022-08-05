@@ -38,6 +38,7 @@ login:
   form_btn_connexion: Se connecter
   alert_noPermission: Aucune permission accordée
   select: Selectionner
+  form_btn_register: Créer un compte
 
 password_reset:
   title: Mettre à jour votre mot de passe
@@ -910,6 +911,23 @@ store:
     tr_sellPrice: Prix de vente
     tr_unitProfit: Marge unitaire
     tr_percentProfit: '% marge sur CA'
+  list:
+    title: Liste des entreprises associées à vous
+  index:
+    title: Liste des entreprises associées à vous
+    block_title: Liste des entreprises associées à vous
+    modal:
+      body: Voulez vous vraiment supprimer cette entreprise
+      title: Supprimer une entreprise
+    tr_actions: Actions
+    tr_name: Nom
+    tr_image: Image
+    tr_address: Adresse
+    tr_role: Rôle
+  edit:
+    title: Information sur l'entreprise
+    block_title: Editer les informations de l'entreprise
+    btn_edit: Editer
 stock:
   index:
     tr_initial: Initial
@@ -1988,6 +2006,9 @@ controller:
       entity: Rôle
       page: Nouveau rôle
   account:
+    register:
+      flash:
+        danger: Un utilisateur existe déjà avec ce nom ou cet email
     importLanguage:
       flash:
         danger:
@@ -2032,6 +2053,7 @@ controller:
       entity: Employé
       page: Nouveau utilisateur
       flash:
+        danger: Veuillez sélectionner qu'un seul rôle
         success: Utilisateur enregistré avec succès
     changeRole:
       flash:
@@ -2101,14 +2123,26 @@ controller:
       entity: Produit
       page: Imprimer les étiquettes de code-barres
   store:
+    list:
+      entity: Entreprise
+      page: Liste des entrepises associés
     value:
       entity: Entreprise
       page: Les produits au magasin
-    index:
+    new:
       entity: Entreprise
       page: Information sur l'entreprise
       flash:
         success: Informations Enregistrées
+    edit:
+      entity: Entreprise
+      page: Information sur l'entreprise
+      flash:
+        success: Informations Enregistrées
+    index:
+      entity: Entreprise
+      page: Liste des entreprises
+
   performance:
     production:
       entity: Statistique
@@ -4024,3 +4058,16 @@ adjustment:
   detail:
     title: Détail sur l'ajustement
     block_title: Détail sur l'ajustement
+register:
+  title: Créer votre compte
+  block_title: Créer votre compte pour commencer
+  card_title: Enregistrer vos informations
+  form_name: Nom
+  form_email: Email
+  form_firstPhoneNumber: Numéro de téléphone
+  form_gender: Gendre
+  form_password: Mot de passe
+  form_btn_register: Enregistrer
+  form_store: Nom de l'entreprise
+  form_info: Veuillez renseigner tous les champs avant validation car ces informations serviront au bon fonctionnement de la gestion de votre activité
+  form_btn_login: Se connecter avec un compte existant

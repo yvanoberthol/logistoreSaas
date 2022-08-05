@@ -23,6 +23,19 @@ class UserRepository extends ServiceEntityRepository implements UserLoaderInterf
         parent::__construct($registry, User::class);
     }
 
+    public function findByStore($store=null){
+
+        $q = $this->createQueryBuilder('u');
+
+        if ($store !== null){
+            $q->innerJoin('u.store','s')
+                ->andWhere('s = :store')
+                ->setParameter('store', $store);
+        }
+        return $q->getQuery()->getResult();
+
+    }
+
     public function findByNameOrEmail($value,$store=null){
         try {
 
@@ -52,7 +65,7 @@ class UserRepository extends ServiceEntityRepository implements UserLoaderInterf
                 ->setParameter('store', $store);
         }
         return $q
-            ->innerJoin('u.role','r')
+            ->innerJoin('u.rules','r')
             ->where('r.name = :value')
             ->setParameter('value', $value)
             ->getQuery()->getResult();
@@ -63,7 +76,7 @@ class UserRepository extends ServiceEntityRepository implements UserLoaderInterf
     {
 
         $q = $this->createQueryBuilder('u')
-            ->innerJoin('u.role','r')
+            ->innerJoin('u.rules','r')
             ->where('r.name = :value')
             ->setParameter('value', $value);
 
@@ -80,7 +93,7 @@ class UserRepository extends ServiceEntityRepository implements UserLoaderInterf
     public function findEmployees($store=null)
     {
         $q = $this->createQueryBuilder('u')
-            ->leftJoin('u.role','r')
+            ->leftJoin('u.rules','r')
             ->where("r is null")
             ->orWhere("r.name != 'ROLE_ADMIN'");
 
@@ -97,7 +110,7 @@ class UserRepository extends ServiceEntityRepository implements UserLoaderInterf
     public function findWithRole($store=null)
     {
         $q = $this->createQueryBuilder('u')
-            ->innerJoin('u.role','r')
+            ->innerJoin('u.rules','r')
             ->where("r is not null");
 
         if ($store !== null){
@@ -112,7 +125,6 @@ class UserRepository extends ServiceEntityRepository implements UserLoaderInterf
     public function getSaleByMonth($month,$year,$store=null): ?array {
         $q = $this->createQueryBuilder('u')
             ->select('u','count(s) as nbSales','sum(s.amount) as amountSold')
-            ->innerJoin('u.role','r')
             ->leftJoin('u.sales','s')
             ->where('MONTH(s.addDate) = :month')
             ->andWhere('YEAR(s.addDate) = :year')
@@ -132,7 +144,6 @@ class UserRepository extends ServiceEntityRepository implements UserLoaderInterf
     public function getSaleByYear($year,$store=null): ?array {
         $q = $this->createQueryBuilder('u')
             ->select('u','sum(s.amount) as amountSold','count(s) as nbSales')
-            ->innerJoin('u.role','r')
             ->leftJoin('u.sales','s')
             ->where('YEAR(s.addDate) = :year')
             ->setParameter('year', $year);
@@ -153,7 +164,7 @@ class UserRepository extends ServiceEntityRepository implements UserLoaderInterf
             ->select('e','sp.salary as salary',
                 'SUM(sp.amount) as amount',
                 '(sp.salary - SUM(sp.amount)) as amountRemaining')
-            ->leftJoin('e.role','r')
+            ->leftJoin('e.rules','r')
             ->leftJoin('e.salaryPayments','sp',Join::WITH,
                 'sp.year = :year and sp.month = :month')
             ->setParameter('year', $year)
@@ -184,7 +195,7 @@ class UserRepository extends ServiceEntityRepository implements UserLoaderInterf
             ->leftJoin('u.sales','s',Join::WITH,
             '(DATE(s.addDate) >= DATE(:start) and s.deleted = false 
             and DATE(s.addDate) <= DATE(:end))')
-            ->innerJoin('u.role','r')
+            ->innerJoin('u.rules','r')
             ->where("r is not null")
             ->andWhere("r.name != 'ROLE_ADMIN'")
             ->setParameter('start',  $start)

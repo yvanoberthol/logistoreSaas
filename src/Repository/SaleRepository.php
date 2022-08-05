@@ -227,7 +227,7 @@ class SaleRepository extends ServiceEntityRepository
 
         if ($user !== null){
             $qb->innerJoin('s.recorder','u')
-                ->innerJoin('u.role','r')
+                ->innerJoin('u.roles','r')
                 ->andWhere('u = :user')
                 ->andWhere("r.rank < 2")
                 ->setParameter('user', $user);

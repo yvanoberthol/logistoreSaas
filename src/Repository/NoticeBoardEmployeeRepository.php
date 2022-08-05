@@ -35,7 +35,7 @@ class NoticeBoardEmployeeRepository extends ServiceEntityRepository
             ->setParameter('statut', $statut)
             ->setParameter('now', new DateTime());
         if ($store !== null){
-            $qb->innerJoin('n.store','st')
+            $qb->innerJoin('nb.store','st')
                 ->andWhere('st = :store')
                 ->setParameter('store', $store);
         }

@@ -28,7 +28,12 @@ PRODUCT_DETAIL: Consulter les détails d'un produit
 PRODUCT_ADD_SUBSTITUTE: Associer un produit remplaçant à un produit
 PRODUCT_REMOVE_SUBSTITUTE: Dissocier un produit remplaçant à un produit
 PRODUCT_IMPORT: Importer une liste de produits
-STORE_INDEX: Consulter et modifier les détails de l'entreprise
+STORE_INDEX: Consulter la liste des entreprises concernées
+STORE_LIST: Consulter la liste des entreprises associées
+STORE_SELECT: Sélectionner l'entreprise à gérer
+STORE_NEW: Enregistrer une nouvelle entreprise
+STORE_EDIT: Editer les détails de l'entreprise
+STORE_DELETE: Supprimer une entreprise
 PERFORMANCE_INDEX: Accéder aux statistiques de l'entreprise
 PERFORMANCE_PRODUCT: Accéder aux statistiques sur les produits vendus
 PERFORMANCE_EMPLOYEE: Accéder à la fiche de chaque employé

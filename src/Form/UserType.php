@@ -30,6 +30,8 @@ class UserType extends ApplicationType
      */
     private $session;
 
+    private $store;
+
     /**
      * CustomerType constructor.
      * @param TranslatorInterface $translator
@@ -39,6 +41,7 @@ class UserType extends ApplicationType
     {
         $this->translator = $translator;
         $this->session = $requestStack->getSession();
+        $this->store = $requestStack->getSession()->get('store');
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -81,16 +84,19 @@ class UserType extends ApplicationType
                         'download_uri' => false,
                         'image_uri' => false
                     ]))
-            ->add('role', EntityType::class,[
+            ->add('rules', EntityType::class,[
                 'class' => Role::class,
                 'label' => 'form.user.role.title',
                 'query_builder' => function(RoleRepository $roleRepository){
-                    return $roleRepository->qbByRole();
+                    return $roleRepository->qbByRole($this->store);
                 },
+
                 'choice_label' => function(Role $role){
                     return $this->translator->trans($role->getTitle(),[],'messages',
                         $this->session->get('_locale'));
-                }
+                },
+                'expanded'  => false,
+                'multiple'  => true
             ])
         ;
     }

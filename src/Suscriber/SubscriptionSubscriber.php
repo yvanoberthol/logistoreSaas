@@ -81,6 +81,7 @@ class SubscriptionSubscriber implements EventSubscriberInterface
                 'documentation',
                 'installation',
                 'account_logout',
+                'account_register',
                 'account_login',
                 'activation',
                 'home',
@@ -90,8 +91,9 @@ class SubscriptionSubscriber implements EventSubscriberInterface
             $path = $event->getRequest()->get('_route');
 
             $setting = $this->session->get('setting');
+            $store = $this->session->get('store');
 
-            if ($setting !== null &&
+            if ($setting !== null && $store !== null &&
                 $setting->getWithSubscription() &&
                 !in_array($path, $allowedPaths, true) &&
                 !str_contains($path, 'rest_')&&
@@ -102,7 +104,7 @@ class SubscriptionSubscriber implements EventSubscriberInterface
                     $this->entityManager->getRepository(Subscription::class);
 
                 /** @var Subscription $subscription */
-                $subscription = $subscriptionRepository->get();
+                $subscription = $subscriptionRepository->get($store);
 
                 if ($subscription !== null &&
                     $subscription->getNbDayRemaining() === 0 &&

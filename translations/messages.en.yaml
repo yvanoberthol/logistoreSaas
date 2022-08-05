@@ -30,6 +30,7 @@ login:
   form_btn_connexion: login
   alert_noPermission: No permission granted
   select: Select
+  form_btn_register: Create an account
 password_reset:
   title: Update your password
   block_title: Update your password
@@ -895,6 +896,22 @@ store:
     tr_sellPrice: Sale price
     tr_unitProfit: Unit profit
     tr_percentProfit: '% profit on turnover'
+  list:
+    title: 'messages'
+  index:
+    title: 'messages'
+    block_title: 'messages'
+    modal:
+      body: 'messages'
+      title: 'messages'
+    tr_actions: 'messages'
+    tr_name: 'messages'
+    tr_image: 'messages'
+    tr_role: 'messages'
+  edit:
+    title: 'messages'
+    block_title: 'messages'
+    btn_edit: 'messages'
 stock:
   index:
     title: List of orders
@@ -2058,6 +2075,9 @@ controller:
       entity: Role
       page: New role
   account:
+    register:
+      flash:
+        danger: This user already exists with this name or this email
     deleteLanguage:
       success: Language successfully deleted
     importLanguage:
@@ -3944,3 +3964,16 @@ adjustment:
   detail:
     title: Adjustment detail
     block_title: Adjustment detail
+register:
+  title: 'messages'
+  block_title: 'messages'
+  card_title: 'messages'
+  form_name: 'messages'
+  form_email: 'messages'
+  form_firstPhoneNumber: 'messages'
+  form_gender: 'messages'
+  form_password: 'messages'
+  form_btn_register: 'messages'
+  form_store: 'messages'
+  form_info: 'messages'
+  form_btn_login: 'messages'

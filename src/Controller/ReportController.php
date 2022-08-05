@@ -95,7 +95,6 @@ class ReportController extends AbstractController
      * @Route("/report/product", name="report_product", methods={"GET","POST"})
      * @param Request $request
      * @param Pdf $pdf
-     * @param StoreRepository $storeRepository
      * @param ProductSaleRepository $productSaleRepository
      * @param LossRepository $lossRepository
      * @param ProductStockRepository $productStockRepository
@@ -105,7 +104,6 @@ class ReportController extends AbstractController
      */
     public function product(Request $request,
                              Pdf $pdf,
-                             StoreRepository $storeRepository,
                              ProductSaleRepository $productSaleRepository,
                              LossRepository $lossRepository,
                              ProductStockRepository $productStockRepository,
@@ -211,7 +209,6 @@ class ReportController extends AbstractController
      * @Route("/report/expense", name="report_expense", methods={"GET","POST"})
      * @param Request $request
      * @param Pdf $pdf
-     * @param StoreRepository $storeRepository
      * @param ExpenseRepository $expenseRepository
      * @param ExpenseTypeRepository $expenseTypeRepository
      * @return Response
@@ -219,14 +216,9 @@ class ReportController extends AbstractController
      */
     public function expense(Request $request,
                                 Pdf $pdf,
-                                StoreRepository $storeRepository,
                                 ExpenseRepository $expenseRepository,
                                 ExpenseTypeRepository $expenseTypeRepository): Response
     {
-
-        /*if ($_ENV['WITH_ACCOUNTING']==='false'){
-            throw new NotFoundHttpException("this ressource don't exists");
-        }*/
 
         $model['store'] = $this->store;
         $model['types'] = $expenseTypeRepository->findBy(['status' => true]);
@@ -302,7 +294,6 @@ class ReportController extends AbstractController
      * @Route("/report/transaction", name="report_transaction", methods={"GET","POST"})
      * @param Request $request
      * @param Pdf $pdf
-     * @param StoreRepository $storeRepository
      * @param TransactionRepository $transactionRepository
      * @param BankRepository $bankRepository
      * @return Response
@@ -405,18 +396,16 @@ class ReportController extends AbstractController
      * @Route("/report/activity", name="report_activity", methods={"GET","POST"})
      * @param Request $request
      * @param Pdf $pdf
-     * @param StoreRepository $storeRepository
      * @param SaleRepository $saleRepository
      * @return Response
      * @throws Exception
      */
     public function activity(Request $request,
                          Pdf $pdf,
-                         StoreRepository $storeRepository,
                          SaleRepository $saleRepository): Response
     {
 
-        $model['store'] = $storeRepository->get();
+        $model['store'] = $this->store;
 
         $intervalDays = $this->setting->getMaxIntervalPeriod();
 
@@ -481,18 +470,16 @@ class ReportController extends AbstractController
      * @Route("/report/sale", name="report_sale", methods={"GET","POST"})
      * @param Request $request
      * @param Pdf $pdf
-     * @param StoreRepository $storeRepository
      * @param SaleRepository $saleRepository
      * @return Response
      * @throws Exception
      */
     public function sale(Request $request,
                          Pdf $pdf,
-                         StoreRepository $storeRepository,
                          SaleRepository $saleRepository): Response
     {
 
-        $model['store'] = $storeRepository->get();
+        $model['store'] = $this->store;
 
         $intervalDays = $this->setting->getMaxIntervalPeriod();
 

@@ -7,22 +7,22 @@ use DateTime;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class LocaleToDateTimeTransformer implements DataTransformerInterface
 {
     /**
-     * @var SessionInterface
+     * @var Session
      */
     private $session;
 
     /**
      * LocaleToDateTimeTransformer constructor.
-     * @param RequestStack $requestStack
+     * @param Session $session
      */
-    public function __construct(RequestStack $requestStack)
+    public function __construct(Session $session)
     {
-        $this->session = $requestStack->getSession();
+        $this->session = $session;
     }
 
 

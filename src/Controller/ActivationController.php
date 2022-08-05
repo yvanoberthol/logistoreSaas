@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Store;
 use App\Entity\Subscription;
 use App\Interfaces\ActivationInterface;
 use App\Repository\SubscriptionRepository;
@@ -37,6 +38,11 @@ class ActivationController extends AbstractController
     private $session;
 
     /**
+     * @var Store
+     */
+    private $store;
+
+    /**
      * ActivationController constructor.
      * @param HttpClientInterface $httpClient
      * @param RequestStack $requestStack
@@ -49,6 +55,7 @@ class ActivationController extends AbstractController
         $this->httpClient = $httpClient;
         $this->logger = $logger;
         $this->session = $requestStack->getSession();
+        $this->store = $requestStack->getSession()->get('store');
     }
 
 
@@ -67,7 +74,7 @@ class ActivationController extends AbstractController
                                SubscriptionRepository $subscriptionRepository): Response
     {
 
-        $model['subscription'] = $subscriptionRepository->get();
+        $model['subscription'] = $subscriptionRepository->get($this->store);
         if (!empty($model['subscription']) && $request->getMethod() === 'POST') {
             $key = $request->get('key');
             $result = $this->sendActivaton($model['subscription'],$key);

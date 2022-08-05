@@ -67,8 +67,8 @@ class LossRepository extends ServiceEntityRepository
     public function countByproducts($store=null){
         $qb = $this->createQueryBuilder('l')
             ->select('p.id','SUM(l.qty) as qty')
-            ->innerJoin('l.productStock','st')
-            ->innerJoin('st.product','p');
+            ->innerJoin('l.productStock','pst')
+            ->innerJoin('pst.product','p');
         if ($store !== null){
             $qb->innerJoin('l.store','st')
                 ->andWhere('st = :store')
@@ -99,16 +99,16 @@ class LossRepository extends ServiceEntityRepository
     public function nbByproductAndPeriodDate($start,$end,$product=null,$store=null)
     {
         $qb = $this->createQueryBuilder('l')
-            ->select( 'm.id','SUM(l.qty) as qty')
-            ->innerJoin('l.productStock','mst')
-            ->innerJoin('mst.product','m')
+            ->select( 'p.id','SUM(l.qty) as qty')
+            ->innerJoin('l.productStock','pst')
+            ->innerJoin('pst.product','p')
             ->where('DATE(l.addDate) >= DATE(:start)')
             ->andWhere('DATE(l.addDate) <= DATE(:end)')
             ->setParameter('start',  $start)
             ->setParameter('end',  $end);
 
         if ($product !== null){
-            $qb->andWhere('m = :product')
+            $qb->andWhere('p = :product')
                 ->setParameter('product', $product);
         }
         if ($store !== null){
@@ -117,8 +117,8 @@ class LossRepository extends ServiceEntityRepository
                 ->setParameter('store', $store);
         }
 
-        return $qb->groupBy('m.id')
-            ->orderBy('m.id')->getQuery()->getResult();
+        return $qb->groupBy('p.id')
+            ->orderBy('p.id')->getQuery()->getResult();
     }
 
     public function nbByproductAndBeforePeriodDate($start,$product=null,$store=null)

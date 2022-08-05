@@ -62,48 +62,27 @@ class ProductStockRepository extends ServiceEntityRepository
 
     public function getOutdated($withdraw,$store=null){
 
-        $q1 = $this->createQueryBuilder('pst')
-            ->innerJoin('pst.stock','s')
+        $qb = $this->createQueryBuilder('pst')->innerJoin('pst.stock','s')
             ->leftJoin('pst.productStockSales','pss')
-            ->where('pss.id is null')
-            ->andwhere('s.status = true')
-            ->andWhere('pst.withdraw = :withdraw')
-            ->andWhere('pst.expirationDate is not null')
-            ->andWhere('DATE(pst.expirationDate) <= DATE(:today)')
-            ->setParameter('today', new DateTime())
-            ->setParameter('withdraw',$withdraw);
-            //->having('pss is null')
-
-        if ($store !== null){
-            $q1->innerJoin('s.store','st')
-                ->andWhere('st = :store')
-                ->setParameter('store', $store);
-        }
-        $q1->getQuery()
-            ->getResult();
-
-
-
-        $q2 = $this->createQueryBuilder('pst')
-            ->innerJoin('pst.stock','s')
-            ->innerJoin('pst.productStockSales','pss')
             ->where('s.status = true')
             ->andWhere('pst.withdraw = :withdraw')
             ->andWhere('pst.expirationDate is not null')
             ->andWhere('DATE(pst.expirationDate) <= DATE(:today)')
+            ->orWhere('pss.id is null')
+            ->orHaving('pst.qty > SUM(pss.qty)')
             ->setParameter('today', new DateTime())
-            ->setParameter('withdraw',$withdraw)
-            ->having('pst.qty > SUM(pss.qty)');
+            ->setParameter('withdraw',$withdraw);
 
         if ($store !== null){
-            $q2->innerJoin('s.store','st')
+            $qb->innerJoin('s.store','st')
                 ->andWhere('st = :store')
                 ->setParameter('store', $store);
         }
-        $q2->getQuery()
-            ->getResult();
+        $qb->getQuery()->getResult();
 
-        return array_merge($q1,$q2);
+
+
+        return $qb->getQuery()->getResult();
     }
 
     public function getByproductWithExpiration($product,$nbStocks = 1,$store=null){

@@ -75,6 +75,7 @@ class ConnectionAuthenticationSubscriber implements EventSubscriberInterface
                 'notice',
                 'nbProduct',
                 'account_login',
+                'account_register',
                 'account_logout',
                 'home',
                 'documentation',

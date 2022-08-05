@@ -251,7 +251,12 @@
                                     <tr>
                                         <td>{{ 'home.home.card_account.tr_appCode'|trans }}</td>
                                         <td>
-                                            {{ app_code }}
+                                            {{ app.session.get('store').appCode }}
+                                            {% if app.session.get('store').appCode is empty %}
+                                                <a href="{{ path('store_generate_code',{id:app.session.get('store').id}) }}">
+                                                    <i class="fa fa-refresh"></i>
+                                                </a>
+                                            {% endif %}
                                         </td>
                                     </tr>
                                 {% endif %}
@@ -297,8 +302,8 @@
             saleByYear(nbSales, {{ year }}),"{{ 'home.home.stat_title'|trans }}",
             thousandSeparator,locale,barcolors);
 
-        const loadAreaAmount= loadAreaChart(elemAreaAmountChart, saleByMonth(saleAmounts,
-                {{ monthNow-1 }},{{ year }}),"{{ 'home.home.stat_title'|trans }}",
+        const loadAreaAmount= loadAreaChart(elemAreaAmountChart,
+            saleByMonth(saleAmounts,{{ monthNow-1 }},{{ year }}),"{{ 'home.home.stat_title'|trans }}",
             thousandSeparator,areacolors);
 
         const loadBarAmount = loadBarChart(elemBarAmountChart,

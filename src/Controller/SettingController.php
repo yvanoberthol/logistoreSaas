@@ -44,13 +44,19 @@ class SettingController extends AbstractController
     private $store;
 
     /**
+     * @var SessionInterface
+     */
+    private $session;
+
+    /**
      * ExpenseController constructor.
      * @param RequestStack $requestStack
      */
     public function __construct(RequestStack $requestStack)
     {
-        $this->setting = $requestStack->getSession()->get('setting');
-        $this->store = $requestStack->getSession()->get('store');
+        $this->session = $requestStack->getSession();
+        $this->setting = $this->session->get('setting');
+        $this->store = $this->session->get('store');
     }
 
     /**
@@ -89,21 +95,21 @@ class SettingController extends AbstractController
      * @Route("/setting/update", name="setting_update", methods={"POST"})
      * @param Request $request
      * @param EntityManagerInterface $entityManager
-     * @param SessionInterface $session
      * @param ProductService $productService
      * @param PageSizeRepository $pageSizeRepository
+     * @param SettingRepository $settingRepository
      * @param ThemeRepository $themeRepository
      * @return Response
      */
     public function update(Request $request,
                            EntityManagerInterface $entityManager,
-                           SessionInterface $session,
                            ProductService $productService,
                            PageSizeRepository $pageSizeRepository,
+                           SettingRepository $settingRepository,
                            ThemeRepository $themeRepository): Response
     {
 
-        $setting = $this->setting;
+        $setting = $settingRepository->find($this->setting->getId());
 
         if ($setting === null)
             throw new RuntimeException('not default setting');
@@ -172,7 +178,7 @@ class SettingController extends AbstractController
                 $stockExpiryDateCount = count($productService
                     ->getProductStockNearExpirationDate((int) $request->get('daybeforeexpiration')));
 
-                $session->set('stockExpiryDateCount',$stockExpiryDateCount);
+                $this->session->set('stockExpiryDateCount',$stockExpiryDateCount);
                 break;
             case 'production':
                 $withGapProduction= $request->get('withGapProduction') !== null;
@@ -330,10 +336,10 @@ class SettingController extends AbstractController
         $entityManager->flush();
 
 
-        $session->set('setting',$setting);
+        $this->session->set('setting',$setting);
 
         if ($themeSelected !== null){
-            $session->set('theme',$themeSelected);
+            $this->session->set('theme',$themeSelected);
         }
 
 

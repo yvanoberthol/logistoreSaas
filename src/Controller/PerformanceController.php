@@ -71,7 +71,7 @@ class PerformanceController extends AbstractController
         $userRepository = $entityManager->getRepository(User::class);
 
         $model['products'] = null;
-        $model['users'] = $userRepository->findBy(['store' => $this->store]);
+        $model['users'] = $userRepository->findByStore($this->store);
 
         $model['start'] = $request->get('start') ?? new DateTime();
         $model['end'] = $request->get('end') ?? new DateTime();

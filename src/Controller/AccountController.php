@@ -5,11 +5,13 @@ namespace App\Controller;
 use App\Entity\Language;
 use App\Entity\PasswordUpdate;
 
+use App\Entity\Store;
 use App\Entity\User;
 use App\Form\PasswordUpdateType;
 use App\Form\RegisterType;
 use App\Repository\LanguageRepository;
 use App\Repository\UserRepository;
+use App\Service\StoreService;
 use App\Util\CountryConstant;
 use App\Util\EnvUtil;
 use App\Util\GlobalConstant;
@@ -23,6 +25,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\PasswordHasher\PasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
@@ -50,6 +53,57 @@ class AccountController extends AbstractController
         }
 
         return $this->render('account/login.html.twig', $model);
+    }
+
+    /**
+     * @Route("/register", name="account_register",methods={"GET","POST"})
+     * @param Request $request
+     * @param UserPasswordHasherInterface $passwordHasher
+     * @param StoreService $storeService
+     * @param EntityManagerInterface $entityManager
+     * @param UserRepository $userRepository
+     * @return Response
+     */
+    public function register(Request $request,
+                             UserPasswordHasherInterface $passwordHasher,
+                             StoreService $storeService,
+                             EntityManagerInterface $entityManager,
+                             UserRepository $userRepository): Response
+    {
+
+        if ($request->isMethod('POST')){
+            $name = $request->get('name');
+            $userFind = $userRepository->findByNameOrEmail(['name' => $name]);
+
+            if ($userFind === null){
+
+                $store = new Store();
+                $store->setName($request->get('store'));
+                $entityManager->persist($store);
+
+                $password = $request->get('password');
+
+                $user = new User();
+                $user->setName($name);
+                $user->setEmail($request->get('email'));
+                $user->setFirstPhoneNumber($request->get('firstPhoneNumber'));
+                $user->setGender($request->get('gender'));
+                $user->setPlainPassword($password);
+                $user->setPassword($passwordHasher->hashPassword($user,$password));
+                $entityManager->persist($user);
+
+                $storeService->processCreateStore($entityManager,$user,$store);
+
+                $entityManager->flush();
+
+                return $this->redirectToRoute('account_login');
+
+            }
+
+            $this->addFlash('danger', 'controller.account.register.flash.danger');
+        }
+
+        return $this->render('account/register.html.twig');
     }
 
     /**

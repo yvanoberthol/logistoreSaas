@@ -28,7 +28,12 @@ PRODUCT_DETAIL: View drug details
 PRODUCT_ADD_SUBSTITUTE: Combine a replacement drug with a drug
 PRODUCT_REMOVE_SUBSTITUTE: Dissociate a substitute drug from a drug
 PRODUCT_IMPORT: Import a product list
-STORE_INDEX: View and edit pharmacy details
+STORE_INDEX: View concerned store list
+STORE_LIST:  View associated store list
+STORE_SELECT: Select the store to manage
+STORE_NEW: Add a new store
+STORE_EDIT: View store details
+STORE_DELETE: Delete a store
 PERFORMANCE_INDEX: Access pharmacy statistics
 PERFORMANCE_PRODUCT: Access statistics on drugs sold
 PERFORMANCE_EMPLOYEE: Access each employee's file

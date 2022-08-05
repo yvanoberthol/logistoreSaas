@@ -58,6 +58,7 @@ class PermissionSubscriber implements EventSubscriberInterface
                 'linkStore',
                 'nbProduct',
                 'account_login',
+                'account_register',
                 'account_logout',
                 'home',
                 'documentation',

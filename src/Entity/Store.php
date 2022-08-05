@@ -226,6 +226,13 @@ class Store
      */
     private $employeeFees;
 
+    private $role;
+
+    /**
+     * @ORM\Column(type="string", length=20)
+     */
+    private $appCode="";
+
     public function __construct()
     {
         $this->products = new ArrayCollection();
@@ -385,6 +392,24 @@ class Store
     public function setUpdatedAt(?DateTimeInterface $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
+        return $this;
+    }
+
+    /**
+     * @return Role
+     */
+    public function getRole(): ?Role
+    {
+        return $this->role;
+    }
+
+    /**
+     * @param Role $role
+     * @return Store
+     */
+    public function setRole(Role $role): self
+    {
+        $this->role = $role;
         return $this;
     }
 
@@ -1272,5 +1297,21 @@ class Store
         }
 
         return $this;
+    }
+
+    public function getAppCode(): ?string
+    {
+        return $this->appCode;
+    }
+
+    public function setAppCode(string $appCode): self
+    {
+        $this->appCode = $appCode;
+
+        return $this;
+    }
+
+    public function __toString(){
+        return 'Store';
     }
 }

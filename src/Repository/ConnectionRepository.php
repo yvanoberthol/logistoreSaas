@@ -52,7 +52,7 @@ class ConnectionRepository extends ServiceEntityRepository
          }
 
         if ($store !== null){
-            $q->innerJoin('n.store','st')
+            $q->innerJoin('c.store','st')
                 ->andWhere('st = :store')
                 ->setParameter('store', $store);
         }

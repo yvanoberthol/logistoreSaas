@@ -10,7 +10,9 @@ use App\Form\UserType;
 use App\Repository\AttendanceRepository;
 use App\Repository\ProductCategoryRepository;
 use App\Repository\RoleRepository;
+use App\Repository\StoreRepository;
 use App\Repository\UserRepository;
+use App\Service\StoreService;
 use App\Util\AttendanceStatusConstant;
 use App\Util\GlobalConstant;
 use App\Util\RandomUtil;
@@ -65,36 +67,42 @@ class UserController extends AbstractController
     /**
      * @Route("/user/new", name="user_new")
      * @param Request $request
+     * @param StoreRepository $storeRepository
      * @param EntityManagerInterface $entityManager
-     * @param ParameterBagInterface $parameterBag
      * @param UserPasswordHasherInterface $passwordEncoder
      * @return Response
      */
     public function new(Request $request,
+                        StoreRepository $storeRepository,
                         EntityManagerInterface $entityManager,
-                        ParameterBagInterface $parameterBag,
                         UserPasswordHasherInterface $passwordEncoder): Response
     {
-        $mode = $parameterBag->get('app.mode');
-        if($mode === 'demo'){
-            $this->addFlash('danger','home.demo.denied');
-            return $this->redirectToRoute('home');
-        }
-
 
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
 
+
+
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            if ($user->getRules()->count() === 1){
+                $randomString = '123456';
+                $user->setPlainPassword($randomString);
+                $user->setPassword($passwordEncoder->hashPassword($user, $randomString));
 
-            $randomString = '123456';
-            $user->setPlainPassword($randomString);
-            $user->setPassword($passwordEncoder->hashPassword($user, $randomString));
-            $user->addStore($this->store);
-            $entityManager->persist($user);
-            $entityManager->flush();
-            $this->addFlash('success', "controller.user.new.flash.success");
+                $store = $storeRepository->find($this->store->getId());
+                $user->addStore($store);
+
+                $entityManager->persist($user);
+                $entityManager->flush();
+                $this->addFlash('success', "controller.user.new.flash.success");
+
+                return $this->redirectToRoute('user_index');
+            }
+
+            $this->addFlash('danger', "controller.user.new.flash.danger");
+
+
         }
 
         $model['form'] = $form->createView();

@@ -32,7 +32,7 @@ class ProductSaleRepository extends ServiceEntityRepository
                 ->setParameter('product', $product);
             if ($store !== null){
                 $qb->innerJoin('s.store','st')
-                    ->andAndWhere('st = :store')
+                    ->andWhere('st = :store')
                     ->setParameter('store', $store);
             }
             return $qb->getQuery()
@@ -52,7 +52,7 @@ class ProductSaleRepository extends ServiceEntityRepository
             ->where('s.deleted = false');
         if ($store !== null){
             $qb->innerJoin('s.store','st')
-                ->andAndWhere('st = :store')
+                ->andWhere('st = :store')
                 ->setParameter('store', $store);
         }
         return $qb->groupBy('p.id')

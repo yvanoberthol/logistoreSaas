@@ -1,0 +1,89 @@
+{% extends 'baseFront.html.twig' %}
+{% block title %}
+    {{ 'register.title'|trans }}
+{% endblock %}
+
+{% block body %}
+    <div class="row my-4">
+        <div class="col-md-10 offset-md-1 col-xl-8 offset-xl-2">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title h3 text-black-50 text-center">
+                        {{ render(path('imageLogo')) }}
+                        <p class="mt-2">{{ 'register.block_title'|trans }}</p>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <h2 class="mb-3">{{ 'register.card_title'|trans }}</h2>
+                    <form class="row" action="{{ path('account_register') }}" method="post">
+                        <input type="hidden" name="_csrf_token"
+                               value="{{ csrf_token('authenticate') }}"
+                        >
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="name">{{ 'register.form_name'|trans }}</label>
+                                <input type="text" class="form-control form-control-lg"
+                                       name="name" id="name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">{{ 'register.form_email'|trans }}</label>
+                                <input type="email" class="form-control form-control-lg"
+                                       name="email" id="email" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="firstPhoneNumber">{{ 'register.form_firstPhoneNumber'|trans }}</label>
+                                <input type="number" class="form-control form-control-lg"
+                                       name="firstPhoneNumber" id="firstPhoneNumber"
+                                       required>
+                            </div>
+                            <div class="form-group">
+                                <label for="gender">{{ 'register.form_gender'|trans }}</label>
+                                <select class="form-control form-control-lg" 
+                                        name="gender" id="gender">
+                                    <option value="Man">
+                                        {{ 'form.user.gender.choices.man'|trans }}
+                                    </option>
+                                    <option value="Woman">
+                                        {{ 'form.user.gender.choices.woman'|trans }}
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="password">{{ 'register.form_password'|trans }}</label>
+                                <input type="password" class="form-control form-control-lg"
+                                       name="password" id="password" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="email">{{ 'register.form_store'|trans }}</label>
+                                <input type="text" class="form-control form-control-lg"
+                                       name="store" id="store" required>
+                            </div>
+                            <div class="form-group">
+                                <div class="alert alert-info text-justify">
+                                  <i class="fa fa-info-circle"></i>
+                                    {{ 'register.form_info'|trans }}.
+                                </div>
+                            </div>
+                            <div class="form-group text-center">
+                                <button type="submit" class="btn btn-lg btn-uyblue
+                                    form-control form-control-lg">
+                                  <i class="fa fa-check-circle"></i>  {{ 'register.form_btn_register'|trans }}
+                                </button>
+                                <div class="mt-2">
+                                    <a href="{{ path('account_login') }}">
+                                       <i class="fa fa-sign-in"></i> {{ 'register.form_btn_login'|trans }}
+                                    </a>
+                                </div>
+
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+

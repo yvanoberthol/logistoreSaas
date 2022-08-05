@@ -11,10 +11,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
- * @UniqueEntity(
- *     fields={"name"},
- *     message="entity.lossType.name"
- * )
  * @ORM\HasLifecycleCallbacks()
  * @ORM\Entity(repositoryClass=LossTypeRepository::class)
  */
@@ -28,7 +24,7 @@ class LossType
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255,unique=true)
+     * @ORM\Column(type="string", length=255)
      */
     private $name;
 

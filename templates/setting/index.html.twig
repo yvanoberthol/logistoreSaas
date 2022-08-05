@@ -686,7 +686,7 @@
                                                             <tr>
                                                                 <td class="font-weight-bold">
                                                                     <input type="radio" name="pdf_sale"
-                                                                           {% if pdfSaleFormat.id == pageSize.id %}checked{% endif %}
+                                                                           {% if pdfSaleFormat is not null and pdfSaleFormat.id == pageSize.id %}checked{% endif %}
                                                                            value="{{ pageSize.id }}">
                                                                 </td>
                                                                 <td>

@@ -1233,18 +1233,34 @@ class TestController extends AbstractController
      * @Route("/test/permission/adjust", name="test_permission_adjust", methods={"POST","GET"})
      * @param PermissionRepository $permissionRepository
      * @param RouterInterface $router
+     * @param RoleRepository $roleRepository
      * @param EntityManagerInterface $entityManager
      * @return Response
      * @throws Exception
      */
     public function testPermissionAdjust(PermissionRepository $permissionRepository,
                                          RouterInterface $router,
+                                         RoleRepository $roleRepository,
                                          EntityManagerInterface $entityManager): Response
     {
 
         $permisions = array_map(static function(Permission $permission){
             return strtoupper($permission->getCode());
         },$permissionRepository->findAll());
+
+        $roles = array_merge(
+            $roleRepository->findBy(['name' => 'ROLE_ADMIN']),
+            $roleRepository->findBy(['name' => 'ROLE_MANAGER'])
+        );
+
+        $permissionNoRoutes = [
+            'SALE_PROFIT',
+            'SALE_DELETE_ALL',
+            'SALE_WITH_DISCOUNT',
+            'SALE_WITH_PARTIAL_PAYMENT',
+            'SALE_WHOLE_WITH_PARTIAL_PAYMENT',
+            'SALE_FOR_EMPLOYEE',
+        ];
 
         $routeNames = $this->getPermissions($router);
         foreach ($permisions as $permissionName){
@@ -1255,6 +1271,19 @@ class TestController extends AbstractController
         }
 
         $entityManager->flush();
+
+        foreach ($permissionNoRoutes as $permissionNoRoute){
+            $permission = new Permission();
+            $permission->setCode(strtoupper($permissionNoRoute));
+            $permission->setAddDate(new DateTime());
+            $entityManager->persist($permission);
+            foreach ($roles as $role){
+            $role->addPermission($permission);
+            }
+        }
+
+        $entityManager->flush();
+
         return $this->redirectToRoute('home');
 
     }

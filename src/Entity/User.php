@@ -229,7 +229,7 @@ class User implements UserInterface,PasswordAuthenticatedUserInterface,Equatable
     /**
      * @ORM\ManyToMany(targetEntity=Role::class, inversedBy="users")
      */
-    private $roles;
+    private $rules;
 
     public function __construct()
     {
@@ -249,7 +249,7 @@ class User implements UserInterface,PasswordAuthenticatedUserInterface,Equatable
         $this->encashments = new ArrayCollection();
         $this->adjustments = new ArrayCollection();
         $this->store = new ArrayCollection();
-        $this->roles = new ArrayCollection();
+        $this->rules = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -475,6 +475,11 @@ class User implements UserInterface,PasswordAuthenticatedUserInterface,Equatable
         return $this->getRoles()[0];
     }
 
+    public function getRole(): ?Role
+    {
+        return $this->getRules()->first();
+    }
+
     public function getTitle(): ?string
     {
         return substr($this->getRule(),5);
@@ -542,9 +547,9 @@ class User implements UserInterface,PasswordAuthenticatedUserInterface,Equatable
      */
     public function getRoles(): array
     {
-        return array_map(static function(Role $role){
+        return $this->getRules()->map(static function(Role $role){
             return $role->getName();
-        },$this->getRules()->toArray());
+        })->toArray();
     }
 
     /**
@@ -1129,34 +1134,43 @@ class User implements UserInterface,PasswordAuthenticatedUserInterface,Equatable
     }
 
     /**
+     * @param null $store
      * @return Collection<int, Role>
      */
-    public function getRules(): Collection
+    public function getRules($store=null): Collection
     {
-        return $this->roles;
+        if ($store !== null){
+            $this->rules = $this->rules->filter(static function(Role $role) use($store){
+                return $role->getStore() === $store;
+            });
+        }
+
+        return $this->rules;
     }
 
-    public function setRules($store): self
+    public function setRoles($store): self
     {
-        $this->roles[] = $this->roles->filter(static function(Role $role) use($store){
-            return $role->getStore() === $store;
-        });
-
-        return $this;
-    }
-
-    public function addRole(Role $role): self
-    {
-        if (!$this->roles->contains($role)) {
-            $this->roles[] = $role;
+        if ($store !== null){
+            $this->rules = $this->rules->filter(static function(Role $role) use($store){
+                return $role->getStore() === $store;
+            });
         }
 
         return $this;
     }
 
-    public function removeRole(Role $role): self
+    public function addRule(Role $role): self
     {
-        $this->roles->removeElement($role);
+        if (!$this->rules->contains($role)) {
+            $this->rules[] = $role;
+        }
+
+        return $this;
+    }
+
+    public function removeRule(Role $role): self
+    {
+        $this->rules->removeElement($role);
 
         return $this;
     }
